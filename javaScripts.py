@@ -53,6 +53,9 @@ const previous = () => {{
 
 let audio = document.getElementById("song")
 
+navigator.mediaSession.setActionHandler('previoustrack', () => {{ previous() }});
+navigator.mediaSession.setActionHandler('nexttrack', () => {{ next() }});
+
 audio.onended = () => {{next()}}
 
 audio.play()

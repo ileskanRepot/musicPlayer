@@ -6,17 +6,29 @@ def songPage(song:str):
 	<h1>{song}</h1>
 	<br/>
 	<button onclick="previous()">⏮︎</button>
-	<audio id="song" src="/api/song/{song}" type="audio/opus" controls></audio>
+	<audio preload="metadata" autoplay id="song" controls src="/api/song/{song}" type="audio/opus">
+    Lul fool Not supported
+  </audio>
 	<button onclick="next()">⏭︎</button>
 
 	<div id="songList" style="display: label;">
 	</div>
 
 	<script src="/song/{song}/app.js"></script>
+
+
 </body></html>
 	"""
-	return ret
+	return ret + footer()
+
+def footer():
+  return f"""
+  <link rel="stylesheet" href="/footer.css">
+  <footer>
+  <p>Source: <a href="https://github.com/ileskanRepot/musicPlayer">Github</a> | Creator: Ileska</p>
+  </footer>
+  """
 
 def mainPage():
 	with open("index.html", mode="r") as file:
-		return file.read()
+		return file.read() + footer()
