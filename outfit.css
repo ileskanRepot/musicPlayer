@@ -1,0 +1,7 @@
+test {
+  display: none;
+  padding: 1rem 0px 1rem 0px;
+  clear: both;
+  overflow: hidden;
+  word-wrap: break-word
+}
