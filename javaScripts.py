@@ -66,3 +66,7 @@ main()
 def mainJs():
 	with open("app.js", mode="r") as file:
 		return file.read()
+
+def loginJs():
+	with open("login.js", mode="r") as file:
+		return file.read()

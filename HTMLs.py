@@ -32,3 +32,7 @@ def footer():
 def mainPage():
 	with open("index.html", mode="r") as file:
 		return file.read() + footer()
+
+def logInPage():
+	with open("login.html", mode="r") as file:
+		return file.read() + footer()
