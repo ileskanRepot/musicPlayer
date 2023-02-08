@@ -7,14 +7,16 @@
 </head>
 
 <body>
-  <form action="/api/login" method="post">
-    <label for="fname">User name:</label><br>
-    <input type="text" id="username" name="username" value=""><br>
-    <label for="lname">Password:</label><br>
-    <input type="password" id="psw2" name="psw" value=""><br><br>
-    <input type="submit" value="Submit">
-  </form>
+  <div style="flex-direction: column;display:flex;">
+    <p id="warn" style="display:none;"></p>
+    <b>Username</b>
+    <input id="userName" type="text">
+    <b>Password</b>
+    <input id="psw" type="password">
+    <button type="button" id="btn">Log in</button>
+  </div>
 
+  <script src="login.js"></script>
 </body>
 
 </html>

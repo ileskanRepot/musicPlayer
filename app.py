@@ -1,4 +1,4 @@
-from fastapi.responses import StreamingResponse, HTMLResponse
+from fastapi.responses import StreamingResponse, HTMLResponse, RedirectResponse
 from fastapi import Cookie, FastAPI, HTTPException, Response, Form
 from os.path import exists
 from hashlib import sha512
@@ -8,16 +8,28 @@ from datetime import datetime, timedelta
 from typing import Union
 from string import ascii_letters, digits
 from os import listdir
+from pydantic import BaseModel
 
 
 from javaScripts import songJS, mainJs, loginJs
 from HTMLs import mainPage, songPage, logInPage
 from css import mainCSS, footerCSS
 
-globalPath = "/home/ileska/music/"
+app = FastAPI()
+
+
+class User(BaseModel):
+	userName: str = ""
+	password: str = ""
+
+
 
 # [userName: str, token: str, lastUsed: datetime.now]
-globalCurrentAuthTokens = []
+
+@app.on_event('startup')
+def init_data():
+	print("init call")
+	globalPath = "/home/ileska/music/"
 
 # Functions
 def randomString(size):
@@ -30,17 +42,22 @@ def getSongs():
 	return dir_list
 
 def removeOldAuth(currUser, index):
-	if datetime.now() - currUser[2] > timedelta(minutes=15):
-		globalCurrentAuthTokens.pop(index)
+	if len(currUser) != 3:
+		return
+	if datetime.now() - datetime.strptime(currUser[2],'%Y-%m-%d %H:%M:%S.%f') > timedelta(minutes=15):
+		print("Test")
 
 
-def isAuthenticated(token,userName):
+
+def isAuthenticated(userName,token):
 	ret = False
-	for ii,currUser in enumerate(globalCurrentAuthTokens):
-		if currUser[0] == userName and currUser[1] == token:
-			currUser[2] = datetime.now()
-			ret = True
-		removeOldAuth(userName, ii)
+	with open("token.csv","r") as tokenFile:
+		for ii,currUserTmp in enumerate(tokenFile.readlines()[1:]):
+			currUser = currUserTmp.replace('\n', '').split(",")
+
+			if currUser[0] == userName and currUser[1] == token:
+				currUser[2] = datetime.now()
+				ret = True
 		
 	return ret
 
@@ -56,6 +73,7 @@ def createUser(name,psw):
 def login(userName: str, password: str):
 	authToken = ""
 	isUser = False
+
 	with open("./login.csv","r") as authFile:
 		for authStr in authFile.readlines()[1:]:
 			splittedAuthStrong = authStr.replace('\n', '').split(',')
@@ -63,34 +81,35 @@ def login(userName: str, password: str):
 				continue
 
 			dbUserName, dbPassword = splittedAuthStrong
+
 			if userName == dbUserName:
 				if hashedPsw(userName,password) == dbPassword:
 
-					tmpCurrAuth = globalCurrentAuthTokens
+					with open("./token.csv","r") as tokenFile:
 
-					for ii, currUser in enumerate(tmpCurrAuth):
-						if len(currUser) != 3:
-							globalCurrentAuthTokens.pop(ii)
-							continue
+						for ii, currUserTmp in enumerate(tokenFile.readlines()[1:]):
+							currUser = currUserTmp.split(',')
+							if len(currUser) != 3:
+								continue
 
-						# If check if user has already an entry in authtokens
-						if currUser[0] == userName:
-							currUser[2] = datetime.now()
-							authToken = currUser[1]
-							isUser = True
-							# Remove old authentication
-							removeOldAuth(currUser, ii)
+							# If check if user has already an entry in authtokens
+							if currUser[0] == userName:
+								currUser[2] = datetime.now()
+								authToken = currUser[1]
+								isUser = True
+								# Remove old authentication
+
 
 
 					if not isUser:
 						authToken = randomString(randint(20, 25))
-						globalCurrentAuthTokens.append([userName, authToken, datetime.now()])
+						with open("./token.csv","a") as tokenFile:
+							tokenFile.write(f"{userName},{authToken},{datetime.now()}")
 						isUser = True
 
 	return isUser, authToken
 
 
-app = FastAPI()
 
 # HTML
 @app.get("/")
@@ -110,14 +129,24 @@ async def js():
 	return Response(content = mainJs(), media_type="text/javascript")
 
 @app.get("/superSecret")
-async def logInTest(userName: str = Cookie(default = ""), authToken: str = Cookie(default = "")):
-	if authToken != "tmp":
-		return "Hävisit"
-	return "Correct"
+async def logInTest(userName: str = Cookie(default = ""), token: str = Cookie(default = "")):
+	print(userName)
+	print(token)
+	print(isAuthenticated(userName, token))
+
+	print("Tist")
+	if not isAuthenticated(userName, token):
+		return RedirectResponse(url='/login')
+	return "Correctly authenticated"
 
 @app.get("/login")
 async def loginPage():
 	return HTMLResponse(logInPage())
+
+@app.get("/login.js")
+async def loginPage():
+	return Response(content = loginJs(), media_type="text/javascript")
+
 
 @app.get("/song/{name}")
 async def song(name: str):
@@ -144,8 +173,10 @@ async def song(name: str):
 	return StreamingResponse(iterfile(), media_type="audio/opus")
 
 @app.post("/api/login")
-async def logInApi(userName: str = Form(""), password: str = Form("")):
-	isUser, authToken = login(userName, password)
+async def logInApi(user: User = User()):
+	isUser, authToken = login(user.userName, user.password)
+	print(user.userName)
+	print(user.password)
 	if not isUser:
 		raise HTTPException(status_code=403, detail="User not found")
 	
