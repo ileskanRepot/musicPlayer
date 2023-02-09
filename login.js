@@ -39,7 +39,7 @@ btnLabel.addEventListener("click", async () => {
       localStorage.setItem("userName", JSON.stringify(userName))
       document.cookie = `userName=${userName}`
       document.cookie = `token=${(await data).token}`
-      window.location.href = "/superSecret"
+      window.location.href = "/"
     }
   })
 

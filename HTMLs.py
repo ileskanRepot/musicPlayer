@@ -6,7 +6,7 @@ def songPage(song:str):
 	<h1>{song}</h1>
 	<br/>
 	<button onclick="previous()">⏮︎</button>
-	<audio preload="metadata" autoplay id="song" controls src="/api/song/{song}" type="audio/opus">
+	<audio autoplay preload="metadata" autoplay id="song" controls src="/api/song/{song}" type="audio/opus">
     Lul fool Not supported
   </audio>
 	<button onclick="next()">⏭︎</button>

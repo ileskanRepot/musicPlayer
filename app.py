@@ -22,14 +22,14 @@ class User(BaseModel):
 	userName: str = ""
 	password: str = ""
 
-
+globalPath = "/home/ileska/music/"
 
 # [userName: str, token: str, lastUsed: datetime.now]
 
 @app.on_event('startup')
 def init_data():
 	print("init call")
-	globalPath = "/home/ileska/music/"
+	
 
 # Functions
 def randomString(size):
@@ -41,10 +41,15 @@ def getSongs():
 
 	return dir_list
 
-def removeOldAuth(currUser, index):
+def removeOldAuths(currUser, index):
+	date = 0
+	if type(currUser[2]) == type(datetime(2022,1,1)):
+		date = currUser[2]
+	if type(currUser[2]) == str:
+		date = datetime.strptime(currUser[2],'%Y-%m-%d %H:%M:%S.%f')
 	if len(currUser) != 3:
 		return
-	if datetime.now() - datetime.strptime(currUser[2],'%Y-%m-%d %H:%M:%S.%f') > timedelta(minutes=15):
+	if datetime.now() - date > timedelta(minutes=15):
 		print("Test")
 
 
@@ -97,7 +102,7 @@ def login(userName: str, password: str):
 								currUser[2] = datetime.now()
 								authToken = currUser[1]
 								isUser = True
-								# Remove old authentication
+							# Remove old authentication
 
 
 
@@ -113,56 +118,61 @@ def login(userName: str, password: str):
 
 # HTML
 @app.get("/")
-async def root():
+async def root(userName: str = Cookie(default = ""), token: str = Cookie(default = "")):
+	if not isAuthenticated(userName, token):
+		return RedirectResponse(url='/login')
 	return HTMLResponse(mainPage())
 
 @app.get("/outfit.css")
-async def root():
+async def root(userName: str = Cookie(default = ""), token: str = Cookie(default = "")):
+	if not isAuthenticated(userName, token):
+		return RedirectResponse(url='/login')
 	return Response(content = mainCSS(), media_type="text/css")
 
 @app.get("/footer.css")
-async def root():
+async def root(userName: str = Cookie(default = ""), token: str = Cookie(default = "")):
+	if not isAuthenticated(userName, token):
+		return RedirectResponse(url='/login')
 	return Response(content = footerCSS(), media_type="text/css")
 
 @app.get("/app.js")
-async def js():
-	return Response(content = mainJs(), media_type="text/javascript")
-
-@app.get("/superSecret")
-async def logInTest(userName: str = Cookie(default = ""), token: str = Cookie(default = "")):
-	print(userName)
-	print(token)
-	print(isAuthenticated(userName, token))
-
-	print("Tist")
+async def js(userName: str = Cookie(default = ""), token: str = Cookie(default = "")):
 	if not isAuthenticated(userName, token):
 		return RedirectResponse(url='/login')
-	return "Correctly authenticated"
+	return Response(content = mainJs(), media_type="text/javascript")
 
 @app.get("/login")
-async def loginPage():
+async def loginPage(userName: str = Cookie(default = ""), token: str = Cookie(default = "")):
 	return HTMLResponse(logInPage())
 
 @app.get("/login.js")
-async def loginPage():
+async def loginPage(userName: str = Cookie(default = ""), token: str = Cookie(default = "")):
 	return Response(content = loginJs(), media_type="text/javascript")
 
 
 @app.get("/song/{name}")
-async def song(name: str):
+async def song(name: str,userName: str = Cookie(default = ""), token: str = Cookie(default = "")):
+	if not isAuthenticated(userName, token):
+		return RedirectResponse(url='/login')
 	return HTMLResponse(songPage(name))
 
 @app.get("/song/{name}/app.js")
-async def songjs(name: str):
+async def songjs(name: str,userName: str = Cookie(default = ""), token: str = Cookie(default = "")):
+	if not isAuthenticated(userName, token):
+		return RedirectResponse(url='/login')
 	return Response(content = songJS(name), media_type="text/javascript")
 
 # API
 @app.get("/api/songs")
-async def songs():
+async def songs(userName: str = Cookie(default = ""), token: str = Cookie(default = "")):
+	if not isAuthenticated(userName, token):
+		return RedirectResponse(url='/login')
 	return getSongs()
 
 @app.get("/api/song/{name}")
-async def song(name: str):
+async def song(name: str, userName: str = Cookie(default = ""), token: str = Cookie(default = "")):
+	if not isAuthenticated(userName, token):
+		return RedirectResponse(url='/login')
 	def iterfile():
 		with open(globalPath+name, mode="rb") as file:
 			yield from file
@@ -175,8 +185,6 @@ async def song(name: str):
 @app.post("/api/login")
 async def logInApi(user: User = User()):
 	isUser, authToken = login(user.userName, user.password)
-	print(user.userName)
-	print(user.password)
 	if not isUser:
 		raise HTTPException(status_code=403, detail="User not found")
 	
