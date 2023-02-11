@@ -23,8 +23,9 @@ class User(BaseModel):
 	userName: str = ""
 	password: str = ""
 
-globalPath = "/home/ileska/music/"
-tokenFilePath = "./token.csv"
+globalPath = "/musicServer/music/"
+tokenFilePath = "/musicServer/token.csv"
+loginFilePath = "/musicServer/login.csv"
 
 # [userName: str, token: str, lastUsed: datetime.now]
 
@@ -106,7 +107,7 @@ def hashedPsw(userName, psw):
 	return sha512( str( userName+psw ).encode("utf-8") ).hexdigest()
 
 def createUser(name,psw):
-	with open("./login.csv","a") as authFile:
+	with open(loginFilePath,"a") as authFile:
 		authFile.write(f"\n{name},{hashedPsw(name, psw)}")
 
 
@@ -115,7 +116,7 @@ def login(userName: str, password: str):
 	authToken = ""
 	isUser = False
 
-	with open("./login.csv","r") as authFile:
+	with open(loginFilePath,"r") as authFile:
 		for authStr in authFile.readlines()[1:]:
 			splittedAuthStrong = authStr.replace('\n', '').split(',')
 			if len(splittedAuthStrong) != 2:
@@ -126,7 +127,7 @@ def login(userName: str, password: str):
 			if userName == dbUserName:
 				if hashedPsw(userName,password) == dbPassword:
 
-					with open("./token.csv","r") as tokenFile:
+					with open(tokenFilePath,"r") as tokenFile:
 
 						for ii, currUserTmp in enumerate(tokenFile.readlines()[1:]):
 							currUser = currUserTmp.split(',')
@@ -144,7 +145,7 @@ def login(userName: str, password: str):
 
 					if not isUser:
 						authToken = randomString(randint(20, 25))
-						with open("./token.csv","a") as tokenFile:
+						with open(tokenFilePath,"a") as tokenFile:
 							tokenFile.write(f"{userName},{authToken},{datetime.now()}\n")
 						isUser = True
 
