@@ -35,8 +35,6 @@ btnLabel.addEventListener("click", async () => {
     } else {
       console.log(userName)
       console.log((await data).token)
-      localStorage.setItem("token", JSON.stringify((await data).token))
-      localStorage.setItem("userName", JSON.stringify(userName))
       document.cookie = `userName=${userName}`
       document.cookie = `token=${(await data).token}`
       window.location.href = "/"
