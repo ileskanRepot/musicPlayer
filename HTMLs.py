@@ -25,7 +25,7 @@ def footer():
   return f"""
   <link rel="stylesheet" href="/footer.css">
   <footer>
-  <p>Source: <a href="https://github.com/ileskanRepot/musicPlayer">Github</a> | Creator: Ileska</p>
+  <p>Source: <a href="https://github.com/ileskanRepot/musicPlayer">Github</a> | Creator: Ileska | <a href="/logout">Logout</a></p>
   </footer>
   """
 

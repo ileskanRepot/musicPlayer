@@ -18,11 +18,13 @@ from css import mainCSS, footerCSS
 app = FastAPI()
 
 
+
 class User(BaseModel):
 	userName: str = ""
 	password: str = ""
 
 globalPath = "/home/ileska/music/"
+tokenFilePath = "./token.csv"
 
 # [userName: str, token: str, lastUsed: datetime.now]
 
@@ -41,22 +43,56 @@ def getSongs():
 
 	return dir_list
 
-def removeOldAuths(currUser, index):
-	date = 0
-	if type(currUser[2]) == type(datetime(2022,1,1)):
-		date = currUser[2]
-	if type(currUser[2]) == str:
-		date = datetime.strptime(currUser[2],'%Y-%m-%d %H:%M:%S.%f')
-	if len(currUser) != 3:
-		return
-	if datetime.now() - date > timedelta(minutes=15):
-		print("Test")
+def removeOldAuths():
+	curTokens = []
+	with open(tokenFilePath,"r") as tokenFile:
+		curTokens = tokenFile.readlines()
+	tmpTokens = curTokens
+	for ii, user in enumerate(tmpTokens[1:]):
+		userSplit = user.split(",")
 
+		if len(userSplit) != 3:
+			continue
+		date = 0
+		date = userSplit[2].replace('\n', '')
+		if datetime.now() - datetime.strptime(date, "%Y-%m-%d %H:%M:%S.%f") > timedelta(minutes=15):
+			curTokens.remove(f"{userSplit[0]},{userSplit[1]},{userSplit[2]}")
+			
+	print(curTokens)
+	with open(tokenFilePath,"w") as tokenFile:
+		for token in curTokens:
+			tokenFile.write(token)
+
+def removeAuth(userName,token):
+	try:
+		curTokens = []
+		with open(tokenFilePath,"r") as tokenFile:
+			curTokens = tokenFile.readlines()
+
+		# Make temporaly list so I can pop variables out of original
+		tmp = curTokens
+		for ii, userToken in enumerate(tmp[1:]):
+			userSplit = userToken.split(",")
+			if len(userSplit) != 3:
+				curTokens.pop(ii + 1)
+				continue
+
+			if userSplit[0] == userName and userSplit[1] == token:
+				curTokens.pop(ii + 1)
+				break
+
+		with open(tokenFilePath,"w") as tokenFile:
+			for token in curTokens:
+				tokenFile.write(token)
+		return True
+
+	except:
+		return False
 
 
 def isAuthenticated(userName,token):
 	ret = False
-	with open("token.csv","r") as tokenFile:
+	with open(tokenFilePath,"r") as tokenFile:
 		for ii,currUserTmp in enumerate(tokenFile.readlines()[1:]):
 			currUser = currUserTmp.replace('\n', '').split(",")
 
@@ -109,12 +145,13 @@ def login(userName: str, password: str):
 					if not isUser:
 						authToken = randomString(randint(20, 25))
 						with open("./token.csv","a") as tokenFile:
-							tokenFile.write(f"{userName},{authToken},{datetime.now()}")
+							tokenFile.write(f"{userName},{authToken},{datetime.now()}\n")
 						isUser = True
 
 	return isUser, authToken
 
 
+removeOldAuths()
 
 # HTML
 @app.get("/")
@@ -161,6 +198,12 @@ async def songjs(name: str,userName: str = Cookie(default = ""), token: str = Co
 	if not isAuthenticated(userName, token):
 		return RedirectResponse(url='/login')
 	return Response(content = songJS(name), media_type="text/javascript")
+
+@app.get("/logout")
+async def songjs(userName: str = Cookie(default = ""), token: str = Cookie(default = "")):
+	removeAuth(userName,token)
+	return RedirectResponse(url='/login')
+
 
 # API
 @app.get("/api/songs")
