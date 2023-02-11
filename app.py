@@ -107,7 +107,7 @@ def hashedPsw(userName, psw):
 
 def createUser(name,psw):
 	with open("./login.csv","a") as authFile:
-		authFile.write(f"{name},{hashedPsw(name, psw)}")
+		authFile.write(f"\n{name},{hashedPsw(name, psw)}")
 
 
 
