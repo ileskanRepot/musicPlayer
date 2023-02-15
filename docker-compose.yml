@@ -1,0 +1,11 @@
+version: "1.0"
+services:
+  web:
+    environment:
+      - DEPLOY=1
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - "~/music:/musicServer/music"
+      - "./psw/:/musicServer/psw"
