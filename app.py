@@ -7,7 +7,7 @@ from random import randint
 from datetime import datetime, timedelta
 from typing import Union
 from string import ascii_letters, digits
-from os import listdir
+from os import listdir, getenv
 from pydantic import BaseModel
 
 
@@ -18,14 +18,20 @@ from css import mainCSS, footerCSS
 app = FastAPI()
 
 
-
 class User(BaseModel):
 	userName: str = ""
 	password: str = ""
 
-globalPath = "/musicServer/music/"
-tokenFilePath = "/musicServer/token.csv"
-loginFilePath = "/musicServer/login.csv"
+
+globalPath = "~/music/"
+tokenFilePath = "./psw/token.csv"
+loginFilePath = "./psw/login.csv"
+print(getenv('DEPLOY'))
+print(type(getenv('DEPLOY')))
+if getenv('DEPLOY') == "1":
+	globalPath = "/musicServer/music/"
+	tokenFilePath = "/musicServer/psw/token.csv"
+	loginFilePath = "/musicServer/psw/login.csv"
 
 # [userName: str, token: str, lastUsed: datetime.now]
 
