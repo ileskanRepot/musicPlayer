@@ -7,5 +7,8 @@
       ];
     in with pkgs; [
       (python39.withPackages env)
+      nodejs
+      nodePackages.npm
+      vite
     ];
 }
