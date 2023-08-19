@@ -1,6 +1,6 @@
-from fastapi.responses import StreamingResponse, HTMLResponse, RedirectResponse
+from fastapi.responses import StreamingResponse, HTMLResponse, RedirectResponse, FileResponse
 from fastapi import Cookie, FastAPI, HTTPException, Response, Form
-from os.path import exists
+from os.path import exists, expanduser
 from hashlib import sha512
 from secrets import choice
 from random import randint
@@ -23,22 +23,17 @@ class User(BaseModel):
 	password: str = ""
 
 
-globalPath = "~/music/"
+globalPath = expanduser("~") + "/music/"
 tokenFilePath = "./psw/token.csv"
 loginFilePath = "./psw/login.csv"
-print(getenv('DEPLOY'))
-print(type(getenv('DEPLOY')))
+favicon_path = "./favicon.ico"
+
 if getenv('DEPLOY') == "1":
 	globalPath = "/musicServer/music/"
 	tokenFilePath = "/musicServer/psw/token.csv"
 	loginFilePath = "/musicServer/psw/login.csv"
 
 # [userName: str, token: str, lastUsed: datetime.now]
-
-@app.on_event('startup')
-def init_data():
-	print("init call")
-	
 
 # Functions
 def randomString(size):
@@ -211,6 +206,9 @@ async def songjs(userName: str = Cookie(default = ""), token: str = Cookie(defau
 	removeAuth(userName,token)
 	return RedirectResponse(url='/login')
 
+@app.get('/favicon.ico', include_in_schema=False)
+async def favicon():
+    return FileResponse(favicon_path)
 
 # API
 @app.get("/api/songs")
