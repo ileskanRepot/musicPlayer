@@ -1,9 +1,13 @@
-def songPage(song:str):
-	ret = f"""<!DOCTYPE HTML>
+head = """<!DOCTYPE HTML>
 <html><head>
-<title>{song[0:10]}</title>
-</head><body>
-	<h1>{song}</h1>
+<title>Ileska Music</title>
+</head><body>"""
+
+def addFooterAndHeader(body:str):
+	return head + body + "</body></html>"
+
+def songPage(song:str):
+	ret = f"""<h1>{song}</h1>
 	<br/>
 	<button onclick="previous()">⏮︎</button>
 	<audio autoplay preload="metadata" autoplay id="song" controls src="/api/song/{song}" type="audio/opus">
@@ -14,11 +18,7 @@ def songPage(song:str):
 	<div id="songList" style="display: label;">
 	</div>
 
-	<script src="/song/{song}/app.js"></script>
-
-
-</body></html>
-	"""
+	<script src="/song/{song}/app.js"></script>"""
 	return ret + footer()
 
 def footer():
