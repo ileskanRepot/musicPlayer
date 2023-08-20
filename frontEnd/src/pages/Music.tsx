@@ -20,7 +20,7 @@ const Music = () => {
         preload="metadata"
         id="song"
         controls
-        src={`http://localhost:8000/api/song/${name}`}
+        src={`/api/song/${name}`}
       >
         Lul not supported
       </audio>

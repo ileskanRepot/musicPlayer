@@ -6,7 +6,7 @@ const useCheckLogin = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:8000/api/isLoggedIn`, {
+    fetch(`/api/isLoggedIn`, {
       credentials: "include",
     })
       .then((resp) => resp.json())
