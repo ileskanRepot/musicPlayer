@@ -6,7 +6,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ileskanrepot/musicplayer
+  IMAGE_NAME: ileskanrepot/musicplayer-backend
 
 jobs:
   build-and-push-image:
