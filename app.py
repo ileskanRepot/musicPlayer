@@ -237,3 +237,9 @@ async def logInApi(user: User = User()):
 		raise HTTPException(status_code=403, detail="User not found")
 	
 	return {"token":authToken}
+
+@app.get("/api/isLoggedIn")
+async def isLoggedIn(userName: str = Cookie(default = ""), token: str = Cookie(default = "")):
+	if not isAuthenticated(userName, token):
+		return False
+	return True

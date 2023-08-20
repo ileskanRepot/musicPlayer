@@ -4,7 +4,7 @@ FROM python:3.9
 
 WORKDIR /musicServer
 
-COPY ./* /musicServer/
+COPY . .
 
 RUN pip install --no-cache --upgrade -r /musicServer/requirements.txt
 
