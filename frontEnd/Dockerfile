@@ -5,7 +5,7 @@ FROM node:18-alpine as build
 WORKDIR /frontEnd
 
 COPY package-lock.json package.json  ./
-RUN npm i
+RUN npm ci
 
 COPY tsconfig.json ./
 COPY src ./scr
