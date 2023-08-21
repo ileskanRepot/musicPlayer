@@ -1,11 +1,21 @@
 # syntax=docker/dockerfile:1
    
-FROM node:18-alpine
+FROM node:18-alpine as build
 
 WORKDIR /frontEnd
 
-COPY . .
+COPY ../package.json ../package-lock.json ./
+RUN npm ci --omit=dev
 
-RUN npm install
+COPY tsconfig.json ./
+COPY src ./scr
+COPY public ./public
 
-CMD ["npm", "run", "dev"]
+RUN npm run build
+
+FROM nginx AS run
+
+COPY --from=build /frontEnd/build /usr/share/nginx/html
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 5173
