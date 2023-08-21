@@ -25,7 +25,7 @@ const Login = () => {
     // let data = new FormData();
     // data.append("json", JSON.stringify(user));
 
-    fetch("http://localhost:8000/api/login", {
+    fetch("/api/login", {
       method: "post",
       body: JSON.stringify({ userName: username, password: password }),
       headers: { "Content-Type": "application/json" },

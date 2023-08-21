@@ -5,7 +5,7 @@ const Home = () => {
   const [listsSongs, setListSongs] = useState<string[]>([]);
 
   useEffect(() => {
-    fetch(`http://localhost:8000/api/songs`, {
+    fetch(`/api/songs`, {
       credentials: "include",
     })
       .then((resp) => resp.json())

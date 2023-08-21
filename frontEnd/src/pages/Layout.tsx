@@ -34,7 +34,7 @@ const Layout = () => {
           <Link to="/">
             <img
               style={{ width: "3rem", height: "3rem" }}
-              src="/favicon.ico"
+              src="/api/favicon.ico"
             ></img>
           </Link>
         </div>
