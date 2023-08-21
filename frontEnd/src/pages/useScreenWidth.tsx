@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 // import { useNavigate } from "../../node_modules/react-router-dom/dist/index";
 
 const useScreenWidth = (minWidth: number) => {

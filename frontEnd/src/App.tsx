@@ -1,5 +1,5 @@
 // import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+// import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Layout from "./pages/Layout";
 import NoPage from "./pages/NoPage";
@@ -8,7 +8,7 @@ import Login from "./pages/Login";
 import Music from "./pages/Music";
 import Logout from "./pages/Logout";
 import "./App.css";
-import { useState } from "react";
+// import { useState } from "react";
 import * as React from "react";
 import {
   createBrowserRouter,
@@ -31,16 +31,16 @@ function App() {
     },
   ]);
 
-  let [auth, setAuth] = useState(false);
-  let reqAuth = (nextState, replace, next) => {
-    if (!auth) {
-      replace({
-        pathname: "/login",
-        state: { nextPathname: nextState.location.pathname },
-      });
-    }
-    return true;
-  };
+  // let [auth, setAuth] = useState(false);
+  // let reqAuth = (nextState, replace, next) => {
+  //   if (!auth) {
+  //     replace({
+  //       pathname: "/login",
+  //       state: { nextPathname: nextState.location.pathname },
+  //     });
+  //   }
+  //   return true;
+  // };
 
   return (
     <RouterProvider router={router} />

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CookiesProvider, useCookies } from "react-cookie";
+import { useCookies } from "react-cookie";
 import { useNavigate } from "../../node_modules/react-router-dom/dist/index";
 
 const Login = () => {
@@ -13,7 +13,7 @@ const Login = () => {
     setPassword(event.target.value);
   }
 
-  const [cookies, setCookie] = useCookies([]);
+  const [_, setCookie] = useCookies<string>([]);
   const navigate = useNavigate();
 
   function login(event: React.MouseEvent<HTMLElement>) {

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useParams } from "react-router";
 // import { useNavigate } from "../../node_modules/react-router-dom/dist/index";
 import useCheckLogin from "./checkLogin";
