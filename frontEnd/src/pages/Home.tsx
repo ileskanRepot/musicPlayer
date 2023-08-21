@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useCheckLogin from "./checkLogin";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [listsSongs, setListSongs] = useState<string[]>([]);
@@ -31,9 +32,9 @@ const Home = () => {
         }}
       >
         {listsSongs.map((e, i) => (
-          <a key={i} style={{ display: "block" }} href={`/music/${e}`}>
+          <Link key={i} style={{ display: "block" }} to={`/music/${e}`}>
             {e.replace(/\.[^/.]+$/, "")}
-          </a>
+          </Link>
         ))}
       </div>
     </>
