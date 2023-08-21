@@ -20,7 +20,7 @@ RUN npm run build
 
 FROM nginx AS run
 
-COPY --from=build /frontEnd/build /usr/share/nginx/html
+COPY --from=build /frontEnd/dist /usr/share/nginx/html
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 5173
