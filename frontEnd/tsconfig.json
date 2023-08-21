@@ -13,7 +13,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
-    "tsx": "react",
+    // "tsx": "react",
 
     /* Linting */
     "strict": true,
