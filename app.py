@@ -243,3 +243,7 @@ async def isLoggedIn(userName: str = Cookie(default = ""), token: str = Cookie(d
 	if not isAuthenticated(userName, token):
 		return False
 	return True
+
+@app.get('/api/favicon.ico', include_in_schema=False)
+async def favicon():
+    return FileResponse(favicon_path)
