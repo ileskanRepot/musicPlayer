@@ -4,7 +4,7 @@ FROM node:18-alpine as build
 
 WORKDIR /frontEnd
 
-COPY ../package.json ../package-lock.json ./
+COPY package.json  ./
 RUN npm ci --omit=dev
 
 COPY tsconfig.json ./
