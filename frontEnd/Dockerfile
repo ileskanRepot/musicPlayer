@@ -5,7 +5,9 @@ FROM node:18-alpine as build
 WORKDIR /frontEnd
 
 COPY tsconfig.node.json package-lock.json package.json  ./
-RUN npm ci
+RUN npm ci \
+	&& npm install typescript -g
+
 
 COPY tsconfig.json ./
 COPY src ./scr
