@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
    
-FROM node:18-alpine as build
+FROM node:latest as build
 
 WORKDIR /frontEnd
 
@@ -10,9 +10,11 @@ RUN npm ci \
 
 
 COPY tsconfig.json ./
-COPY src ./scr
+COPY src ./src
 COPY index.html ./
 COPY public ./public
+
+RUN ls src
 
 RUN npm run build
 
