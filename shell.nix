@@ -6,7 +6,7 @@
         uvicorn
       ];
     in with pkgs; [
-      (python39.withPackages env)
+      (python311.withPackages env)
       nodejs
       nodePackages.npm
       vite
