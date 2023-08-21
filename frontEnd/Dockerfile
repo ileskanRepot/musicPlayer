@@ -9,6 +9,7 @@ RUN npm ci
 
 COPY tsconfig.json ./
 COPY src ./scr
+COPY index.html ./
 COPY public ./public
 
 RUN npm run build
