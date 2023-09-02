@@ -27,11 +27,13 @@ globalPath = expanduser("~") + "/music/"
 tokenFilePath = "./psw/token.csv"
 loginFilePath = "./psw/login.csv"
 favicon_path = "./favicon.ico"
+logsFilePath = "./psw/logs.txt"
 
 if getenv('DEPLOY') == "1":
 	globalPath = "/musicServer/music/"
 	tokenFilePath = "/musicServer/psw/token.csv"
 	loginFilePath = "/musicServer/psw/login.csv"
+	logsFilePath = "/musicServer/psw/logs.txt"
 
 # [userName: str, token: str, lastUsed: datetime.now]
 
@@ -116,6 +118,9 @@ def createUser(name,psw):
 def login(userName: str, password: str):
 	authToken = ""
 	isUser = False
+
+	with open(logsFilePath,"a") as logsFile:
+		logsFile.write(f"{userName}, {datetime.now()}\n")
 
 	with open(loginFilePath,"r") as authFile:
 		for authStr in authFile.readlines()[1:]:
