@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
 import useCheckLogin from "./checkLogin";
 import { Link } from "react-router-dom";
+import settings from "../constants";
 
 const Home = () => {
   const [listsSongs, setListSongs] = useState<string[]>([]);
 
   useEffect(() => {
-    fetch(`/api/songs`, {
+    fetch(`${settings.backendUrl}/api/songs`, {
       credentials: "include",
     })
       .then((resp) => resp.json())
       .then((resp) => {
-        console.log(resp);
         setListSongs(resp);
+        // console.log(JSON.stringify(listsSongs));
+        localStorage.setItem("songs", JSON.stringify(resp));
       });
   }, []);
 

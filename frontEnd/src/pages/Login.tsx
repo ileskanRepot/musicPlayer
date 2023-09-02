@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "../../node_modules/react-router-dom/dist/index";
+import settings from "../constants";
 
 const Login = () => {
   let [username, setUsername] = useState("");
   let [password, setPassword] = useState("");
+  let [loginResponse, setloginResponse] = useState("");
 
   function updateUser(event: React.ChangeEvent<HTMLInputElement>) {
     setUsername(event.target.value);
@@ -17,6 +19,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   function login(event: React.MouseEvent<HTMLElement>) {
+    event.preventDefault();
     if (username === "" || password === "") {
       return null;
     }
@@ -25,17 +28,16 @@ const Login = () => {
     // let data = new FormData();
     // data.append("json", JSON.stringify(user));
 
-    fetch("/api/login", {
+    fetch(`${settings.backendUrl}/api/login`, {
       method: "post",
       body: JSON.stringify({ userName: username, password: password }),
       headers: { "Content-Type": "application/json" },
     })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log(data.token);
         setCookie("userName", username, { path: "/" });
         setCookie("token", data.token, { path: "/" });
-        navigate("/");
+        navigate(`/`);
       });
 
     event.preventDefault();
@@ -43,6 +45,7 @@ const Login = () => {
   return (
     <>
       <h1>LOGIN</h1>
+      {loginResponse}
       <form>
         <span>
           <label id="usernameLabel">Username</label>

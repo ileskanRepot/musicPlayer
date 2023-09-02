@@ -1,6 +1,7 @@
 import React from "react";
 import { Outlet, Link } from "react-router-dom";
 import useScreenWidth from "./useScreenWidth";
+import settings from "../constants";
 
 type Props = { loc: string; textColor: string; text: string };
 const LinkColor = ({ loc, textColor, text }: Props) => {
@@ -15,7 +16,6 @@ const LinkColor = ({ loc, textColor, text }: Props) => {
 
 const Layout = () => {
   const screenWidth = useScreenWidth(450);
-  console.log("screenwidth", screenWidth);
   const textColor = "white";
 
   return (
@@ -31,10 +31,10 @@ const Layout = () => {
         }}
       >
         <div className="tobBarButton">
-          <Link to="/">
+          <Link to={`/`}>
             <img
               style={{ width: "3rem", height: "3rem" }}
-              src="/api/favicon.ico"
+              src={`${settings.backendUrl}/api/favicon.ico`}
             ></img>
           </Link>
         </div>
@@ -50,7 +50,7 @@ const Layout = () => {
           </p>
         )}
         <div className="tobBarButton">
-          <LinkColor loc="/logout" text="Logout" textColor={textColor} />
+          <LinkColor loc={`/logout`} text="Logout" textColor={textColor} />
         </div>
       </div>
 
