@@ -243,6 +243,13 @@ async def logInApi(user: User = User()):
 	
 	return {"token":authToken}
 
+@app.get("/api/logout")
+async def logInApi(userName: str = Cookie(default = ""), token: str = Cookie(default = "")):
+	print(userName,token)
+	print("WEE")
+	removeAuth(userName,token)
+	return RedirectResponse(url='/login')
+
 @app.get("/api/isLoggedIn")
 async def isLoggedIn(userName: str = Cookie(default = ""), token: str = Cookie(default = "")):
 	if not isAuthenticated(userName, token):
