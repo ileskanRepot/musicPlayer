@@ -40,14 +40,16 @@ const Music = () => {
 
     setSongName(name);
 
-    let songs = JSON.parse(localStorage.getItem("songs"));
-    console.log(songs);
-    let cur = songs.indexOf(name);
-
-    console.log(cur);
-    setSmallListSongs(
-      songs.slice(Math.max(cur - 5, 0), Math.min(cur + 10, songs.length))
-    );
+    let songString = localStorage.getItem("songs");
+    if (songString) {
+      let songs = JSON.parse(songString);
+      console.log(songs);
+      let cur = songs.indexOf(name);
+      console.log(cur);
+      setSmallListSongs(
+        songs.slice(Math.max(cur - 5, 0), Math.min(cur + 10, songs.length))
+      );
+    }
   }, []);
 
   const loggedIn = useCheckLogin();
