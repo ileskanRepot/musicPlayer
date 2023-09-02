@@ -6,7 +6,7 @@ import settings from "../constants";
 const Login = () => {
   let [username, setUsername] = useState("");
   let [password, setPassword] = useState("");
-  let [loginResponse, setloginResponse] = useState("");
+  // let [loginResponse, _] = useState("");
 
   function updateUser(event: React.ChangeEvent<HTMLInputElement>) {
     setUsername(event.target.value);
@@ -45,7 +45,7 @@ const Login = () => {
   return (
     <>
       <h1>LOGIN</h1>
-      {loginResponse}
+      {/* {loginResponse} */}
       <form>
         <span>
           <label id="usernameLabel">Username</label>
