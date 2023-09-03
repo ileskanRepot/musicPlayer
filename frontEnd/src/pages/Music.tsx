@@ -106,11 +106,11 @@ const Music = () => {
         </button>
         <audio
           autoPlay
+          controls
           preload="metadata"
           id="song"
-          controls
           src={`${settings.backendUrl}/api/song/${name}`}
-          onEnded={nextSong}
+          onEndedCapture={nextSong}
         >
           Lul not supported
         </audio>
