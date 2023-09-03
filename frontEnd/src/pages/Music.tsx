@@ -59,7 +59,7 @@ const Music = () => {
     return null;
   }
 
-  function nextSong(_: React.MouseEvent<HTMLElement>) {
+  function nextSong() {
     let urlSplit = window.location.pathname.split("/");
     let name = decodeURI(urlSplit[urlSplit.length - 1]);
     let songString = localStorage.getItem("songs");
@@ -72,7 +72,7 @@ const Music = () => {
       navigate(`/music/${songs[cur + 1]}`);
     }
   }
-  function previousSong(_: React.MouseEvent<HTMLElement>) {
+  function previousSong() {
     let urlSplit = window.location.pathname.split("/");
     let name = decodeURI(urlSplit[urlSplit.length - 1]);
     let songString = localStorage.getItem("songs");
@@ -99,6 +99,7 @@ const Music = () => {
           id="song"
           controls
           src={`${settings.backendUrl}/api/song/${name}`}
+          onEnded={nextSong}
         >
           Lul not supported
         </audio>
