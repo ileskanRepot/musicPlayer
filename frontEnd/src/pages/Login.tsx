@@ -66,7 +66,9 @@ const Login = () => {
             onChange={updatePass}
           ></input>
         </span>
-        <button onClick={login}>Login</button>
+        <button id="loginBtn" onClick={login}>
+          Login
+        </button>
       </form>
     </>
   );
