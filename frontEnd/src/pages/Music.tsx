@@ -37,6 +37,17 @@ const Music = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    navigator.mediaSession.setActionHandler("previoustrack", () => {
+      {
+        previousSong();
+      }
+    });
+    navigator.mediaSession.setActionHandler("nexttrack", () => {
+      {
+        nextSong();
+      }
+    });
+
     let urlSplit = window.location.pathname.split("/");
     let name = decodeURI(urlSplit[urlSplit.length - 1]);
 
