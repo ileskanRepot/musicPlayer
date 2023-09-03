@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
-// import { useNavigate } from "../../node_modules/react-router-dom/dist/index";
+import { useNavigate } from "../../node_modules/react-router-dom/dist/index";
 import useCheckLogin from "./checkLogin";
 import settings from "../constants";
 import { Link } from "react-router-dom";
@@ -33,7 +33,9 @@ const Music = () => {
   const [songName, setSongName] = useState<string>("");
 
   const [smallListsSongs, setSmallListSongs] = useState<string[]>([]);
-  // const navigate = useNavigate();
+
+  const navigate = useNavigate();
+
   useEffect(() => {
     let urlSplit = window.location.pathname.split("/");
     let name = decodeURI(urlSplit[urlSplit.length - 1]);
@@ -50,18 +52,47 @@ const Music = () => {
         songs.slice(Math.max(cur - 5, 0), Math.min(cur + 10, songs.length))
       );
     }
-  }, []);
+  }, [window.location.pathname]);
 
   const loggedIn = useCheckLogin();
   if (!loggedIn) {
     return null;
   }
 
+  function nextSong(_: React.MouseEvent<HTMLElement>) {
+    let urlSplit = window.location.pathname.split("/");
+    let name = decodeURI(urlSplit[urlSplit.length - 1]);
+    let songString = localStorage.getItem("songs");
+
+    if (songString) {
+      let songs = JSON.parse(songString);
+      console.log(songs);
+      let cur = songs.indexOf(name);
+
+      navigate(`/music/${songs[cur + 1]}`);
+    }
+  }
+  function previousSong(_: React.MouseEvent<HTMLElement>) {
+    let urlSplit = window.location.pathname.split("/");
+    let name = decodeURI(urlSplit[urlSplit.length - 1]);
+    let songString = localStorage.getItem("songs");
+
+    if (songString) {
+      let songs = JSON.parse(songString);
+      console.log(songs);
+      let cur = songs.indexOf(name);
+
+      navigate(`/music/${songs[cur - 1]}`);
+    }
+  }
+
   return (
     <>
       <h1>{songName}</h1>
-      <div>
-        <button></button>
+      <div className="audioDiv">
+        <button className="audioBtn" onClick={previousSong}>
+          ⏮
+        </button>
         <audio
           autoPlay
           preload="metadata"
@@ -71,9 +102,12 @@ const Music = () => {
         >
           Lul not supported
         </audio>
-        <button></button>
+        <button className="audioBtn" onClick={nextSong}>
+          ⏭
+        </button>
       </div>
       <div
+        className="songsDiv"
         style={{
           display: "flex",
           flexDirection: "column",
