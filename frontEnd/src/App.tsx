@@ -43,7 +43,11 @@ function App() {
   // };
 
   return (
-    <RouterProvider router={router} />
+		<>
+    	<RouterProvider router={router} />
+			<p>Music by Eric Matyas</p>
+			<p>www.soundimage.org</p>
+  	</>
     // <>
     //   <BrowserRouter>
     //     <Routes>
